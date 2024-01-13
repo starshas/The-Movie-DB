@@ -1,6 +1,10 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -13,8 +17,28 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildFeatures {
+        buildConfig = true
+    }
+
+    val secretsPropertiesFile = project.rootProject.file("secrets.properties")
+    val secretsProperties = Properties()
+
+    if (secretsPropertiesFile.exists()) {
+        secretsProperties.load(secretsPropertiesFile.inputStream())
+    } else {
+        throw GradleException("secrets.properties could not be found.")
+    }
+
+    buildTypes {
+        getByName("debug") {
+            buildConfigField("String", "API_KEY", "${secretsProperties["API_KEY"]}")
+        }
+        getByName("release") {
+            buildConfigField("String", "API_KEY", "${secretsProperties["API_KEY"]}")
+        }
     }
 
     viewBinding {
@@ -46,6 +70,15 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.google.dagger:hilt-android-gradle-plugin:2.48")
+    implementation("com.google.dagger:hilt-android:2.48")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation("com.jakewharton.timber:timber:5.0.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+    implementation("androidx.fragment:fragment-ktx:1.6.2")
+    kapt("com.google.dagger:hilt-android-compiler:2.48")
+    kapt("androidx.hilt:hilt-compiler:1.1.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
