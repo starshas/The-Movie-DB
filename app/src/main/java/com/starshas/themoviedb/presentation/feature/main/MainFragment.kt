@@ -7,10 +7,16 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.starshas.themoviedb.R
+import com.starshas.themoviedb.data.models.Movie
 import com.starshas.themoviedb.databinding.FragmentMainBinding
+import com.starshas.themoviedb.presentation.feature.movieinfo.MovieInfoFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainFragment : Fragment() {
@@ -31,8 +37,18 @@ class MainFragment : Fragment() {
         recyclerView.layoutManager = gridLayoutManager
         recyclerView.adapter = MoviesAdapter(
             context = requireContext(),
-            openMovieAction = {}
+            openMovieAction = {
+                navigateToAnotherFragment(it)
+            },
+            setFavorite = { movieId: Int, newValue: Boolean  -> setFavorite(movieId, newValue)},
+            isFavoriteCallback = { movieId, callback ->
+                lifecycleScope.launch {
+                    val isFavorite = viewModel.isFavorite(movieId).first()
+                    callback(isFavorite)
+                }
+            }
         )
+
         binding.buttonReload.setOnClickListener {
             viewModel.fetchNowPlayingMovies()
             it.visibility = View.GONE
@@ -57,6 +73,24 @@ class MainFragment : Fragment() {
                 viewModel.resetErrorMessage()
                 binding.buttonReload.visibility = View.VISIBLE
             }
+        }
+    }
+
+    private fun setFavorite(movieId: Int, newValue: Boolean) {
+        viewModel.setFavorite(movieId, newValue)
+    }
+
+    private fun navigateToAnotherFragment(movie: Movie) {
+        val destinationFragment = MovieInfoFragment().apply {
+            arguments = Bundle().apply {
+                putParcelable(MovieInfoFragment.ARGUMENT_MOVIE, movie)
+            }
+        }
+
+        requireActivity().supportFragmentManager.beginTransaction().apply {
+            replace(R.id.fragmentContainer, destinationFragment)
+            addToBackStack(null)
+            commit()
         }
     }
 

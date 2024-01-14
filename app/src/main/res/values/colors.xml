@@ -2,6 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="movieItemBackground">#3b3b3b</color>
-    <color name="notificationBar">#000</color>
+   <!-- <color name="appBackground">#1E1E1E</color>-->
+    <color name="notificationBarDay">#fff</color>
+    <color name="notificationBarNight">#000</color>
 </resources>

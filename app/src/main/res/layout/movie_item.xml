@@ -3,28 +3,40 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/movieItemBackground"
     android:orientation="vertical"
     android:paddingStart="8dp"
     android:paddingEnd="8dp"
     android:paddingBottom="8dp">
 
-    <ImageView
-        android:id="@+id/imageViewPoster"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:contentDescription="@string/content_description_poster"
-        android:scaleType="centerCrop"
-        android:src="@drawable/movie_item_preview" />
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/movieItemImageViewPoster"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:contentDescription="@string/content_description_poster"
+            android:scaleType="centerCrop"
+            android:src="@drawable/movie_item_preview" />
+
+        <ImageView
+            android:id="@+id/movieItemImageViewStar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:layout_margin="8dp"
+            android:contentDescription="@string/content_description_favorite"
+            android:src="@drawable/ic_star_empty" />
+    </FrameLayout>
 
     <TextView
-        android:id="@+id/textViewTitle"
+        android:id="@+id/movieItemTextViewTitle"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_gravity="center"
         android:gravity="center"
         android:layout_marginTop="8dp"
         android:text="Movie Title"
-        android:textColor="@color/white"
         tools:ignore="HardcodedText" />
 </LinearLayout>

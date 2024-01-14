@@ -1,11 +1,22 @@
 package com.starshas.themoviedb.di
 
 import com.starshas.themoviedb.common.AppConstants
+import com.starshas.themoviedb.data.DataStoreManager
+import com.starshas.themoviedb.data.DataStoreManagerImpl
 import com.starshas.themoviedb.data.MovieDbApi
+import com.starshas.themoviedb.data.repositories.FavoritesRepository
+import com.starshas.themoviedb.data.repositories.FavoritesRepositoryImpl
 import com.starshas.themoviedb.data.repositories.MoviesRepository
 import com.starshas.themoviedb.data.repositories.MoviesRepositoryImpl
+import com.starshas.themoviedb.domain.usecases.GetFavoriteStatusUseCase
+import com.starshas.themoviedb.domain.usecases.GetFavoriteStatusUseCaseImpl
 import com.starshas.themoviedb.domain.usecases.GetNowPlayingMoviesUseCase
 import com.starshas.themoviedb.domain.usecases.GetNowPlayingMoviesUseCaseImpl
+import com.starshas.themoviedb.domain.usecases.SetFavoriteUseCase
+import com.starshas.themoviedb.domain.usecases.SetFavoriteUseCaseImpl
+import com.starshas.themoviedb.utils.StringProvider
+import com.starshas.themoviedb.utils.StringProviderImpl
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -51,7 +62,37 @@ object AppModule {
 
     @Singleton
     @Provides
+    fun provideFavoritesRepository(dataStoreManager: DataStoreManager): FavoritesRepository {
+        return FavoritesRepositoryImpl(dataStoreManager)
+    }
+
+    @Singleton
+    @Provides
     fun provideGetNowPlayingMoviesUseCase(moviesRepository: MoviesRepository): GetNowPlayingMoviesUseCase {
         return GetNowPlayingMoviesUseCaseImpl(moviesRepository)
     }
+
+    @Singleton
+    @Provides
+    fun provideGetFavoriteStatusUseCase(favoritesRepository: FavoritesRepository): GetFavoriteStatusUseCase {
+        return GetFavoriteStatusUseCaseImpl(favoritesRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideSetFavoriteUseCase(favoritesRepository: FavoritesRepository): SetFavoriteUseCase {
+        return SetFavoriteUseCaseImpl(favoritesRepository)
+    }
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class DataStoreModule {
+    @Binds
+    @Singleton
+    abstract fun bindDataStoreManager(impl: DataStoreManagerImpl): DataStoreManager
+
+    @Binds
+    @Singleton
+    abstract fun bindStringProvider(impl: StringProviderImpl): StringProvider
 }

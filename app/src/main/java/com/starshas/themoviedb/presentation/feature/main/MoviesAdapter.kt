@@ -16,12 +16,15 @@ import com.starshas.themoviedb.data.models.Movie
 class MoviesAdapter(
     private val context: Context,
     private val listMovies: MutableList<Movie> = mutableListOf(),
-    private val openMovieAction: (Movie) -> Unit
+    private val openMovieAction: (Movie) -> Unit,
+    private val setFavorite: (Int, Boolean) -> Unit,
+    private val isFavoriteCallback: (Int, (Boolean) -> Unit) -> Unit
 ) :
     RecyclerView.Adapter<MoviesAdapter.MovieViewHolder>() {
     class MovieViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val imageViewPoster: ImageView = view.findViewById(R.id.imageViewPoster)
-        val textViewTitle: TextView = view.findViewById(R.id.textViewTitle)
+        val imageViewPoster: ImageView = view.findViewById(R.id.movieItemImageViewPoster)
+        val textViewTitle: TextView = view.findViewById(R.id.movieItemTextViewTitle)
+        val imageViewStar: ImageView = view.findViewById(R.id.movieItemImageViewStar)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
@@ -39,6 +42,22 @@ class MoviesAdapter(
         holder.imageViewPoster.setOnClickListener {
             openMovieAction(listMovies[position])
         }
+
+        isFavoriteCallback(movie.id) { isFavorite ->
+            setStarIcon(holder, isFavorite)
+        }
+
+        holder.imageViewStar.setOnClickListener {
+            isFavoriteCallback(movie.id) { isFavorite ->
+                val newValue = !isFavorite
+                setFavorite(movie.id, newValue)
+                setStarIcon(holder, newValue)
+            }
+        }
+    }
+
+    private fun setStarIcon(holder: MovieViewHolder, isFavorite: Boolean) {
+        holder.imageViewStar.setImageResource(if (isFavorite) R.drawable.ic_star else R.drawable.ic_star_empty)
     }
 
     override fun getItemCount() = listMovies.size

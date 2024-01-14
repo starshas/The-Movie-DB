@@ -1,8 +1,13 @@
 <resources>
     <string name="app_name">The Movie DB</string>
-    <string name="content_description_poster">Image poster</string>
+    <string name="content_description_poster">Poster</string>
+    <string name="content_description_movie_poster">Movie poster</string>
     <string name="main_error_while_loading_the_list">Error while loading the list!</string>
     <string name="main_button_reload">Reload</string>
     <string name="main_network_error">Network error!</string>
     <string name="main_http_error">HTTP Error %1$s: %2$s</string>
+    <string name="movie_info_release_date">Release Date: %1$s</string>
+    <string name="movie_info_rating">Rating: %1$s</string>
+    <string name="movie_info_overview">%1$s</string>
+    <string name="content_description_favorite">Add to favorites</string>
 </resources>
