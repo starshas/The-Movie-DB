@@ -1,6 +1,7 @@
 package com.starshas.themoviedb
 
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.starshas.themoviedb.databinding.ActivityMainBinding
 import com.starshas.themoviedb.presentation.feature.main.MainFragment
@@ -18,6 +19,27 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainer, MainFragment())
                 .commit()
+
+            supportFragmentManager.addOnBackStackChangedListener {
+                updateActionBar()
+            }
+        }
+        updateActionBar()
+    }
+
+    private fun updateActionBar() {
+        val canNavigateBack = supportFragmentManager.backStackEntryCount > 0
+        supportActionBar?.setDisplayHomeAsUpEnabled(canNavigateBack)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressedDispatcher.onBackPressed()
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
         }
     }
 }

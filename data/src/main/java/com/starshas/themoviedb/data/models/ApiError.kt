@@ -1,4 +1,4 @@
-package com.starshas.themoviedb.data
+package com.starshas.themoviedb.data.models
 
 sealed class ApiError : Exception() {
     object NetworkError : ApiError()

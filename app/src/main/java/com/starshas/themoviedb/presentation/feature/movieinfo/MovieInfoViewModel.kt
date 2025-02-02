@@ -11,8 +11,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MovieInfoViewModel @Inject constructor(
-    private val setFavoriteUseCase: SetFavoriteUseCase,
-    private val getFavoriteStatusUseCase: GetFavoriteStatusUseCase
+    private val setFavoriteUseCase: com.starshas.themoviedb.domain.usecases.SetFavoriteUseCase,
+    private val getFavoriteStatusUseCase: com.starshas.themoviedb.domain.usecases.GetFavoriteStatusUseCase
 ) : ViewModel() {
     fun setFavorite(movieId: Int, isFavorite: Boolean) {
         viewModelScope.launch {

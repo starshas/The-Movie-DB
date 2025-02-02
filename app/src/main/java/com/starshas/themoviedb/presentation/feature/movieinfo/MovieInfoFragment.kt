@@ -5,14 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.starshas.themoviedb.R
-import com.starshas.themoviedb.common.AppConstants
-import com.starshas.themoviedb.data.models.Movie
 import com.starshas.themoviedb.databinding.FragmentMovieInfoBinding
+import com.starshas.themoviedb.domain.models.DomainMovieResponse.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -34,6 +34,8 @@ class MovieInfoFragment : Fragment() {
     @SuppressLint("NewApi")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (activity as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
 
         val movie: Movie = requireArguments().getParcelable(ARGUMENT_MOVIE, Movie::class.java)!!
         binding.movieInfoTextViewMovieTitle.text = movie.title
@@ -44,7 +46,7 @@ class MovieInfoFragment : Fragment() {
         binding.movieInfoTextViewMovieOverview.text =
             getString(R.string.movie_info_overview, movie.overview)
         Glide.with(requireContext())
-            .load(AppConstants.BASE_URL_IMAGES + movie.backdropPath)
+            .load(movie.backdropUrl)
             .centerCrop()
             .into(binding.movieInfoImageViewMoviePoster)
 

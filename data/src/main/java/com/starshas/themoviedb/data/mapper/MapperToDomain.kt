@@ -1,15 +1,13 @@
 package com.starshas.themoviedb.data.mapper
 
+import com.starshas.themoviedb.data.models.ApiError
 import com.starshas.themoviedb.data.constants.DataConstants
-import com.starshas.themoviedb.data.models.DateRange
-import com.starshas.themoviedb.data.models.Movie
-import com.starshas.themoviedb.data.models.MovieResponse
-import com.starshas.themoviedb.domain.models.DateRange as DomainDateRange
-import com.starshas.themoviedb.domain.models.Movie as DomainMovie
-import com.starshas.themoviedb.domain.models.MovieResponse as DomainMovieResponse
+import com.starshas.themoviedb.data.models.DataMovieResponse
+import com.starshas.themoviedb.domain.models.DomainApiError
+import com.starshas.themoviedb.domain.models.DomainMovieResponse as DomainMovieResponse
 
-fun Movie.toDomainModel(): DomainMovie {
-    return DomainMovie(
+fun DataMovieResponse.Movie.toDomainModel(): DomainMovieResponse.Movie {
+    return DomainMovieResponse.Movie(
         adult = adult,
         backdropUrl = "${DataConstants.BASE_URL_IMAGES}$backdropPath",
         genreIds = genreIds,
@@ -27,14 +25,14 @@ fun Movie.toDomainModel(): DomainMovie {
     )
 }
 
- fun DateRange.toDomainModel(): DomainDateRange {
-    return DomainDateRange(
+ fun DataMovieResponse.DatesRange.toDomainModel(): DomainMovieResponse.DateRange {
+    return DomainMovieResponse.DateRange(
         maximum = maximum,
         minimum = minimum
     )
 }
 
-fun MovieResponse.toDomainModel(): DomainMovieResponse {
+fun DataMovieResponse.toDomainModel(): DomainMovieResponse {
     return DomainMovieResponse(
         dates = dates.toDomainModel(),
         page = page,
@@ -42,4 +40,10 @@ fun MovieResponse.toDomainModel(): DomainMovieResponse {
         totalPages = totalPages,
         totalResults = totalResults
     )
+}
+
+fun ApiError.toDomainApiError(): DomainApiError = when (this) {
+    is ApiError.NetworkError -> DomainApiError.NetworkError
+    is ApiError.HttpError -> DomainApiError.HttpError(this.code, this.errorMessage)
+    is ApiError.GenericError -> DomainApiError.GenericError(this.error)
 }

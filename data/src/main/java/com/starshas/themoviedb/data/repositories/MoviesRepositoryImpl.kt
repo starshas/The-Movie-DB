@@ -1,9 +1,10 @@
 package com.starshas.themoviedb.data.repositories
 
-import com.starshas.themoviedb.data.ApiError
+import com.starshas.themoviedb.data.models.ApiError
 import com.starshas.themoviedb.data.MovieDbApi
+import com.starshas.themoviedb.data.mapper.toDomainApiError
 import com.starshas.themoviedb.data.mapper.toDomainModel
-import com.starshas.themoviedb.domain.models.MovieResponse
+import com.starshas.themoviedb.domain.models.DomainMovieResponse
 import com.starshas.themoviedb.domain.repositories.MoviesRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -16,7 +17,7 @@ class MoviesRepositoryImpl(
     private val coroutineContext: CoroutineContext = Dispatchers.IO
 ) : MoviesRepository {
 
-    override suspend fun getNowPlayingMovies(apiKey: String): Result<MovieResponse> =
+    override suspend fun getNowPlayingMovies(apiKey: String): Result<DomainMovieResponse> =
         withContext(coroutineContext) {
             try {
                 val response = movieDbApi.getNowPlayingMovies(apiKey)
@@ -25,14 +26,14 @@ class MoviesRepositoryImpl(
                     Result.success(body.toDomainModel())
                 } else {
                     val errorMessage = response.errorBody()?.string() ?: "Unknown error"
-                    Result.failure(ApiError.HttpError(response.code(), errorMessage))
+                    Result.failure(ApiError.HttpError(response.code(), errorMessage).toDomainApiError())
                 }
             } catch (e: IOException) {
                 Timber.e(e, "IOException while fetching now playing movies")
-                Result.failure(ApiError.NetworkError)
+                Result.failure(ApiError.NetworkError.toDomainApiError())
             } catch (e: Exception) {
                 Timber.e(e, "Exception while fetching now playing movies")
-                Result.failure(ApiError.GenericError(e))
+                Result.failure(ApiError.GenericError(e).toDomainApiError())
             }
         }
 }

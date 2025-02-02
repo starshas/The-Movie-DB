@@ -1,7 +1,8 @@
-package com.starshas.themoviedb.di.utils
+package com.starshas.themoviedb.platform
 
 import android.content.Context
 import androidx.annotation.StringRes
+import com.starshas.themoviedb.domain.utils.StringProvider
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 

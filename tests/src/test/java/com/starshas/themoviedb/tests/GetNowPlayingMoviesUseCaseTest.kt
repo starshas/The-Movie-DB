@@ -2,13 +2,9 @@ package com.starshas.themoviedb.tests
 
 import com.starshas.themoviedb.data.MovieDbApi
 import com.starshas.themoviedb.data.constants.DataConstants
-import com.starshas.themoviedb.data.models.DateRange
-import com.starshas.themoviedb.data.models.Movie
-import com.starshas.themoviedb.data.models.MovieResponse
+import com.starshas.themoviedb.data.models.DataMovieResponse
 import com.starshas.themoviedb.data.repositories.MoviesRepositoryImpl
 import com.starshas.themoviedb.domain.models.DomainApiError
-import com.starshas.themoviedb.domain.models.DomainDateRange
-import com.starshas.themoviedb.domain.models.DomainMovie
 import com.starshas.themoviedb.domain.models.DomainMovieResponse
 import com.starshas.themoviedb.domain.repositories.MoviesRepository
 import com.starshas.themoviedb.domain.usecases.GetNowPlayingMoviesUseCase
@@ -40,8 +36,7 @@ class GetNowPlayingMoviesUseCaseTest {
     private lateinit var moviesRepository: MoviesRepository
     private lateinit var getNowPlayingMoviesUseCase: GetNowPlayingMoviesUseCase
 
-    // Data-layer movie instance.
-    private val movieInstanceExample = Movie(
+    private val dataMovieInstanceExample = DataMovieResponse.Movie(
         adult = false,
         backdropPath = "/pathToBackdrop.jpg",
         genreIds = listOf(28, 12, 16),
@@ -58,9 +53,7 @@ class GetNowPlayingMoviesUseCaseTest {
         voteCount = 12345
     )
 
-    // Expected domain movie instance.
-    // Note that your mapper prepends the base URL from DataConstants.BASE_URL_IMAGES
-    private val domainMovieInstanceExample = DomainMovie(
+    private val domainMovieInstanceExample = DomainMovieResponse.Movie(
         adult = false,
         backdropUrl = "${DataConstants.BASE_URL_IMAGES}/pathToBackdrop.jpg",
         genreIds = listOf(28, 12, 16),
@@ -69,7 +62,7 @@ class GetNowPlayingMoviesUseCaseTest {
         originalTitle = "Fight Club",
         overview = "Overview",
         popularity = 0.5,
-        posterUrl = "${DataConstants.BASE_URL_IMAGES}/pathToPoster.jpg",  // Notice the base URL
+        posterUrl = "${DataConstants.BASE_URL_IMAGES}/pathToPoster.jpg",
         releaseDate = "1999-10-15",
         title = "Fight Club",
         video = false,
@@ -77,12 +70,12 @@ class GetNowPlayingMoviesUseCaseTest {
         voteCount = 12345
     )
 
-    private val dateRangeExample = DateRange(
+    private val dataDateRangeExample = DataMovieResponse.DatesRange(
         maximum = "2023-12-20T23:59:59-05:00",
         minimum = "2023-01-15T00:00:00-05:00"
     )
 
-    private val domainDateRangeExample = DomainDateRange(
+    private val domainDateRangeExample = DomainMovieResponse.DateRange(
         maximum = "2023-12-20T23:59:59-05:00",
         minimum = "2023-01-15T00:00:00-05:00"
     )
@@ -93,16 +86,15 @@ class GetNowPlayingMoviesUseCaseTest {
     @Before
     fun setUp() {
         movieDbApi = mockk()
-        // Use a test dispatcher for deterministic testing.
         moviesRepository = MoviesRepositoryImpl(movieDbApi, testCoroutineRule.dispatcher)
         getNowPlayingMoviesUseCase = GetNowPlayingMoviesUseCaseImpl(moviesRepository)
     }
 
     @Test
     fun `invoke returns success with MovieResponse`() = runTest {
-        val dataMovieResponse = MovieResponse(
-            results = listOf(movieInstanceExample),
-            dates = dateRangeExample,
+        val dataMovieResponse = DataMovieResponse(
+            results = listOf(dataMovieInstanceExample),
+            dates = dataDateRangeExample,
             page = 10,
             totalPages = 11,
             totalResults = 12
@@ -116,28 +108,25 @@ class GetNowPlayingMoviesUseCaseTest {
         )
         val dataResponse = Response.success(dataMovieResponse)
 
-        coEvery { movieDbApi.getNowPlayingMovies(API_KEY) } returns dataResponse
+        coEvery { movieDbApi.getNowPlayingMovies(TEST_API_KEY) } returns dataResponse
 
-        val result: Result<DomainMovieResponse> = getNowPlayingMoviesUseCase(API_KEY)
+        val result: Result<DomainMovieResponse> = getNowPlayingMoviesUseCase(TEST_API_KEY)
         assertTrue(result.isSuccess)
         val actualResponse = result.getOrNull()
         assertNotNull(actualResponse)
-        // Data classes implement equality by comparing all fields.
         assertEquals(expectedResponse, actualResponse)
     }
 
     @Test
     fun `invoke returns failure on generic error`() = runTest {
         val exception = Exception("Generic Exception")
-        coEvery { movieDbApi.getNowPlayingMovies(API_KEY) } throws exception
+        coEvery { movieDbApi.getNowPlayingMovies(TEST_API_KEY) } throws exception
 
-        val result: Result<DomainMovieResponse> = getNowPlayingMoviesUseCase(API_KEY)
+        val result: Result<DomainMovieResponse> = getNowPlayingMoviesUseCase(TEST_API_KEY)
         assertTrue(result.isFailure)
         val actualException = result.exceptionOrNull()
         assertNotNull(actualException)
-        // Safely cast to DomainApiError.GenericError and check its contents.
         val genericError: DomainApiError.GenericError = actualException as DomainApiError.GenericError
-        // Compare the wrapped exception’s message.
         assertEquals("Generic Exception", genericError.error.message)
     }
 
@@ -146,14 +135,13 @@ class GetNowPlayingMoviesUseCaseTest {
         val errorCode = 404
         val errorMessage = "Not Found"
         val errorResponseBody = errorMessage.toResponseBody("application/json".toMediaTypeOrNull())
-        val dataResponse: Response<MovieResponse> = Response.error(errorCode, errorResponseBody)
-        coEvery { movieDbApi.getNowPlayingMovies(API_KEY) } returns dataResponse
+        val dataResponse: Response<DataMovieResponse> = Response.error(errorCode, errorResponseBody)
+        coEvery { movieDbApi.getNowPlayingMovies(TEST_API_KEY) } returns dataResponse
 
-        val result: Result<DomainMovieResponse> = getNowPlayingMoviesUseCase(API_KEY)
+        val result: Result<DomainMovieResponse> = getNowPlayingMoviesUseCase(TEST_API_KEY)
         assertTrue(result.isFailure)
         val actualException = result.exceptionOrNull()
         assertNotNull(actualException)
-        // Safely cast to DomainApiError.HttpError and then verify properties.
         val httpError = actualException as DomainApiError.HttpError
         assertEquals(errorCode, httpError.code)
         assertEquals(errorMessage, httpError.errorMessage)
@@ -174,6 +162,6 @@ class GetNowPlayingMoviesUseCaseTest {
     }
 
     private companion object {
-        const val API_KEY = "api-key"
+        const val TEST_API_KEY = BuildConfig.TEST_API_KEY // Can be any for the current tests
     }
 }

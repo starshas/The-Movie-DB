@@ -11,7 +11,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.starshas.themoviedb.R
-import com.starshas.themoviedb.data.models.Movie
 import com.starshas.themoviedb.databinding.FragmentMainBinding
 import com.starshas.themoviedb.presentation.feature.movieinfo.MovieInfoFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -60,8 +59,10 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.listMovie.observe(viewLifecycleOwner) {
-            moviesAdapter.setData(it)
+        viewModel.listMovie.observe(viewLifecycleOwner) { list ->
+            list?.let {
+                moviesAdapter.setData(it)
+            }
         }
         viewModel.errorMessage.observe(viewLifecycleOwner) {
             if (it != null) {
@@ -80,7 +81,7 @@ class MainFragment : Fragment() {
         viewModel.setFavorite(movieId, newValue)
     }
 
-    private fun navigateToAnotherFragment(movie: Movie) {
+    private fun navigateToAnotherFragment(movie: com.starshas.themoviedb.domain.models.DomainMovieResponse.Movie) {
         val destinationFragment = MovieInfoFragment().apply {
             arguments = Bundle().apply {
                 putParcelable(MovieInfoFragment.ARGUMENT_MOVIE, movie)
@@ -88,8 +89,8 @@ class MainFragment : Fragment() {
         }
 
         requireActivity().supportFragmentManager.beginTransaction().apply {
-            replace(R.id.fragmentContainer, destinationFragment)
-            addToBackStack(null)
+            add(R.id.fragmentContainer, destinationFragment)
+            addToBackStack("MainFragment")
             commit()
         }
     }

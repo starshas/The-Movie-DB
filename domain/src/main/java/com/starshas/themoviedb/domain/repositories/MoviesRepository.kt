@@ -1,7 +1,7 @@
 package com.starshas.themoviedb.domain.repositories
 
-import com.starshas.themoviedb.domain.models.MovieResponse
+import com.starshas.themoviedb.domain.models.DomainMovieResponse
 
 interface MoviesRepository {
-    suspend fun getNowPlayingMovies(apiKey: String): Result<MovieResponse>
+    suspend fun getNowPlayingMovies(apiKey: String): Result<DomainMovieResponse>
 }

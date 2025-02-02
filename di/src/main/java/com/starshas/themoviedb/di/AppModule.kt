@@ -4,18 +4,18 @@ import com.starshas.themoviedb.data.DataStoreManager
 import com.starshas.themoviedb.data.DataStoreManagerImpl
 import com.starshas.themoviedb.data.MovieDbApi
 import com.starshas.themoviedb.data.constants.DataConstants
-import com.starshas.themoviedb.domain.repositories.FavoritesRepository
 import com.starshas.themoviedb.data.repositories.FavoritesRepositoryImpl
-import com.starshas.themoviedb.domain.repositories.MoviesRepository
 import com.starshas.themoviedb.data.repositories.MoviesRepositoryImpl
+import com.starshas.themoviedb.domain.repositories.FavoritesRepository
+import com.starshas.themoviedb.domain.repositories.MoviesRepository
 import com.starshas.themoviedb.domain.usecases.GetFavoriteStatusUseCase
 import com.starshas.themoviedb.domain.usecases.GetFavoriteStatusUseCaseImpl
 import com.starshas.themoviedb.domain.usecases.GetNowPlayingMoviesUseCase
 import com.starshas.themoviedb.domain.usecases.GetNowPlayingMoviesUseCaseImpl
 import com.starshas.themoviedb.domain.usecases.SetFavoriteUseCase
 import com.starshas.themoviedb.domain.usecases.SetFavoriteUseCaseImpl
-import com.starshas.themoviedb.utils.StringProvider
-import com.starshas.themoviedb.utils.StringProviderImpl
+import com.starshas.themoviedb.domain.utils.StringProvider
+import com.starshas.themoviedb.platform.StringProviderImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -52,12 +52,12 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideMovieDbApi(retrofit: Retrofit): com.starshas.themoviedb.data.MovieDbApi = retrofit.create(
+    fun provideMovieDbApi(retrofit: Retrofit): MovieDbApi = retrofit.create(
         com.starshas.themoviedb.data.MovieDbApi::class.java)
 
     @Singleton
     @Provides
-    fun provideMoviesRepository(apiMovieDB: com.starshas.themoviedb.data.MovieDbApi): MoviesRepository {
+    fun provideMoviesRepository(apiMovieDB: MovieDbApi): MoviesRepository {
         return MoviesRepositoryImpl(apiMovieDB)
     }
 
@@ -91,7 +91,7 @@ object AppModule {
 abstract class DataStoreModule {
     @Binds
     @Singleton
-    abstract fun bindDataStoreManager(impl: com.starshas.themoviedb.data.DataStoreManagerImpl): com.starshas.themoviedb.data.DataStoreManager
+    abstract fun bindDataStoreManager(impl: DataStoreManagerImpl): DataStoreManager
 
     @Binds
     @Singleton
