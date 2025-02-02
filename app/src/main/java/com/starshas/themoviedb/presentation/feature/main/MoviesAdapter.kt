@@ -10,8 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.starshas.themoviedb.R
-import com.starshas.themoviedb.common.AppConstants
-import com.starshas.themoviedb.data.models.Movie
+import com.starshas.themoviedb.domain.models.DomainMoviesInfo.*
 
 class MoviesAdapter(
     private val context: Context,
@@ -36,7 +35,7 @@ class MoviesAdapter(
         val movie = listMovies[position]
         holder.textViewTitle.text = movie.title
         Glide.with(context)
-            .load(AppConstants.BASE_URL_IMAGES + movie.posterPath)
+            .load(movie.posterUrl)
             .centerCrop()
             .into(holder.imageViewPoster)
         holder.imageViewPoster.setOnClickListener {

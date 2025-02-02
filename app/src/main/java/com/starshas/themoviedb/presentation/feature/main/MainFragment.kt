@@ -11,8 +11,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.starshas.themoviedb.R
-import com.starshas.themoviedb.data.models.Movie
 import com.starshas.themoviedb.databinding.FragmentMainBinding
+import com.starshas.themoviedb.domain.models.DomainMoviesInfo.Movie
 import com.starshas.themoviedb.presentation.feature.movieinfo.MovieInfoFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
@@ -40,7 +40,7 @@ class MainFragment : Fragment() {
             openMovieAction = {
                 navigateToAnotherFragment(it)
             },
-            setFavorite = { movieId: Int, newValue: Boolean  -> setFavorite(movieId, newValue)},
+            setFavorite = { movieId: Int, newValue: Boolean -> setFavorite(movieId, newValue) },
             isFavoriteCallback = { movieId, callback ->
                 lifecycleScope.launch {
                     val isFavorite = viewModel.isFavorite(movieId).first()
@@ -88,8 +88,8 @@ class MainFragment : Fragment() {
         }
 
         requireActivity().supportFragmentManager.beginTransaction().apply {
-            replace(R.id.fragmentContainer, destinationFragment)
-            addToBackStack(null)
+            add(R.id.fragmentContainer, destinationFragment)
+            addToBackStack("MainFragment")
             commit()
         }
     }
