@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.starshas.themoviedb.R
 import com.starshas.themoviedb.databinding.FragmentMainBinding
+import com.starshas.themoviedb.domain.models.DomainMovieResponse.Movie
 import com.starshas.themoviedb.presentation.feature.movieinfo.MovieInfoFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
@@ -39,7 +40,7 @@ class MainFragment : Fragment() {
             openMovieAction = {
                 navigateToAnotherFragment(it)
             },
-            setFavorite = { movieId: Int, newValue: Boolean  -> setFavorite(movieId, newValue)},
+            setFavorite = { movieId: Int, newValue: Boolean -> setFavorite(movieId, newValue) },
             isFavoriteCallback = { movieId, callback ->
                 lifecycleScope.launch {
                     val isFavorite = viewModel.isFavorite(movieId).first()
@@ -59,10 +60,8 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.listMovie.observe(viewLifecycleOwner) { list ->
-            list?.let {
-                moviesAdapter.setData(it)
-            }
+        viewModel.listMovie.observe(viewLifecycleOwner) {
+            moviesAdapter.setData(it)
         }
         viewModel.errorMessage.observe(viewLifecycleOwner) {
             if (it != null) {
@@ -81,7 +80,7 @@ class MainFragment : Fragment() {
         viewModel.setFavorite(movieId, newValue)
     }
 
-    private fun navigateToAnotherFragment(movie: com.starshas.themoviedb.domain.models.DomainMovieResponse.Movie) {
+    private fun navigateToAnotherFragment(movie: Movie) {
         val destinationFragment = MovieInfoFragment().apply {
             arguments = Bundle().apply {
                 putParcelable(MovieInfoFragment.ARGUMENT_MOVIE, movie)

@@ -10,11 +10,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.starshas.themoviedb.R
+import com.starshas.themoviedb.domain.models.DomainMovieResponse.*
 
 class MoviesAdapter(
     private val context: Context,
-    private val listMovies: MutableList<com.starshas.themoviedb.domain.models.DomainMovieResponse.Movie> = mutableListOf(),
-    private val openMovieAction: (com.starshas.themoviedb.domain.models.DomainMovieResponse.Movie) -> Unit,
+    private val listMovies: MutableList<Movie> = mutableListOf(),
+    private val openMovieAction: (Movie) -> Unit,
     private val setFavorite: (Int, Boolean) -> Unit,
     private val isFavoriteCallback: (Int, (Boolean) -> Unit) -> Unit
 ) :
@@ -61,7 +62,7 @@ class MoviesAdapter(
     override fun getItemCount() = listMovies.size
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setData(list: List<com.starshas.themoviedb.domain.models.DomainMovieResponse.Movie>) {
+    fun setData(list: List<Movie>) {
         listMovies.clear()
         listMovies.addAll(list)
         notifyDataSetChanged()
