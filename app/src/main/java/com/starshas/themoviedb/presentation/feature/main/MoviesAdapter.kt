@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.starshas.themoviedb.R
-import com.starshas.themoviedb.domain.models.DomainMovieResponse.*
+import com.starshas.themoviedb.domain.models.DomainMoviesInfo.*
 
 class MoviesAdapter(
     private val context: Context,

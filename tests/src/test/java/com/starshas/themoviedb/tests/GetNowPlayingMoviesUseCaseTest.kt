@@ -5,7 +5,7 @@ import com.starshas.themoviedb.data.constants.DataConstants
 import com.starshas.themoviedb.data.models.DataMovieResponse
 import com.starshas.themoviedb.data.repositories.MoviesRepositoryImpl
 import com.starshas.themoviedb.domain.models.DomainApiError
-import com.starshas.themoviedb.domain.models.DomainMovieResponse
+import com.starshas.themoviedb.domain.models.DomainMoviesInfo
 import com.starshas.themoviedb.domain.repositories.MoviesRepository
 import com.starshas.themoviedb.domain.usecases.GetNowPlayingMoviesUseCase
 import com.starshas.themoviedb.domain.usecases.GetNowPlayingMoviesUseCaseImpl
@@ -53,7 +53,7 @@ class GetNowPlayingMoviesUseCaseTest {
         voteCount = 12345
     )
 
-    private val domainMovieInstanceExample = DomainMovieResponse.Movie(
+    private val domainMovieInstanceExample = DomainMoviesInfo.Movie(
         adult = false,
         backdropUrl = "${DataConstants.BASE_URL_IMAGES}/pathToBackdrop.jpg",
         genreIds = listOf(28, 12, 16),
@@ -75,7 +75,7 @@ class GetNowPlayingMoviesUseCaseTest {
         minimum = "2023-01-15T00:00:00-05:00"
     )
 
-    private val domainDateRangeExample = DomainMovieResponse.DateRange(
+    private val domainDateRangeExample = DomainMoviesInfo.DateRange(
         maximum = "2023-12-20T23:59:59-05:00",
         minimum = "2023-01-15T00:00:00-05:00"
     )
@@ -99,7 +99,7 @@ class GetNowPlayingMoviesUseCaseTest {
             totalPages = 11,
             totalResults = 12
         )
-        val expectedResponse = DomainMovieResponse(
+        val expectedResponse = DomainMoviesInfo(
             results = listOf(domainMovieInstanceExample),
             dates = domainDateRangeExample,
             page = 10,
@@ -110,7 +110,7 @@ class GetNowPlayingMoviesUseCaseTest {
 
         coEvery { movieDbApi.getNowPlayingMovies(TEST_API_KEY) } returns dataResponse
 
-        val result: Result<DomainMovieResponse> = getNowPlayingMoviesUseCase(TEST_API_KEY)
+        val result: Result<DomainMoviesInfo> = getNowPlayingMoviesUseCase(TEST_API_KEY)
         assertTrue(result.isSuccess)
         val actualResponse = result.getOrNull()
         assertNotNull(actualResponse)
@@ -122,7 +122,7 @@ class GetNowPlayingMoviesUseCaseTest {
         val exception = Exception("Generic Exception")
         coEvery { movieDbApi.getNowPlayingMovies(TEST_API_KEY) } throws exception
 
-        val result: Result<DomainMovieResponse> = getNowPlayingMoviesUseCase(TEST_API_KEY)
+        val result: Result<DomainMoviesInfo> = getNowPlayingMoviesUseCase(TEST_API_KEY)
         assertTrue(result.isFailure)
         val actualException = result.exceptionOrNull()
         assertNotNull(actualException)
@@ -138,7 +138,7 @@ class GetNowPlayingMoviesUseCaseTest {
         val dataResponse: Response<DataMovieResponse> = Response.error(errorCode, errorResponseBody)
         coEvery { movieDbApi.getNowPlayingMovies(TEST_API_KEY) } returns dataResponse
 
-        val result: Result<DomainMovieResponse> = getNowPlayingMoviesUseCase(TEST_API_KEY)
+        val result: Result<DomainMoviesInfo> = getNowPlayingMoviesUseCase(TEST_API_KEY)
         assertTrue(result.isFailure)
         val actualException = result.exceptionOrNull()
         assertNotNull(actualException)

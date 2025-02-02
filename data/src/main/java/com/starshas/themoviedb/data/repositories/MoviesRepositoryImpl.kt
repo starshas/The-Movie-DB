@@ -4,7 +4,7 @@ import com.starshas.themoviedb.data.models.ApiError
 import com.starshas.themoviedb.data.MovieDbApi
 import com.starshas.themoviedb.data.mapper.toDomainApiError
 import com.starshas.themoviedb.data.mapper.toDomainModel
-import com.starshas.themoviedb.domain.models.DomainMovieResponse
+import com.starshas.themoviedb.domain.models.DomainMoviesInfo
 import com.starshas.themoviedb.domain.repositories.MoviesRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -17,7 +17,7 @@ class MoviesRepositoryImpl(
     private val coroutineContext: CoroutineContext = Dispatchers.IO
 ) : MoviesRepository {
 
-    override suspend fun getNowPlayingMovies(apiKey: String): Result<DomainMovieResponse> =
+    override suspend fun getNowPlayingMovies(apiKey: String): Result<DomainMoviesInfo> =
         withContext(coroutineContext) {
             try {
                 val response = movieDbApi.getNowPlayingMovies(apiKey)

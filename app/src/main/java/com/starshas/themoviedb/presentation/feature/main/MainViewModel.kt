@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.starshas.themoviedb.BuildConfig
 import com.starshas.themoviedb.R
 import com.starshas.themoviedb.domain.models.DomainApiError
-import com.starshas.themoviedb.domain.models.DomainMovieResponse
+import com.starshas.themoviedb.domain.models.DomainMoviesInfo
 import com.starshas.themoviedb.domain.usecases.GetFavoriteStatusUseCase
 import com.starshas.themoviedb.domain.usecases.GetNowPlayingMoviesUseCase
 import com.starshas.themoviedb.domain.usecases.SetFavoriteUseCase
@@ -24,8 +24,8 @@ class MainViewModel @Inject constructor(
     private val setFavoriteUseCase: SetFavoriteUseCase,
     private val getFavoriteStatusUseCase: GetFavoriteStatusUseCase
 ) : ViewModel() {
-    private var _listMovies: MutableLiveData<List<DomainMovieResponse.Movie>> = MutableLiveData()
-    val listMovie: LiveData<List<DomainMovieResponse.Movie>> = _listMovies
+    private var _listMovies: MutableLiveData<List<DomainMoviesInfo.Movie>> = MutableLiveData()
+    val listMovie: LiveData<List<DomainMoviesInfo.Movie>> = _listMovies
     private val _errorMessage: MutableLiveData<String?> = MutableLiveData()
     val errorMessage: LiveData<String?> = _errorMessage
 
@@ -35,9 +35,9 @@ class MainViewModel @Inject constructor(
 
     fun fetchNowPlayingMovies() {
         viewModelScope.launch {
-            val result: Result<DomainMovieResponse> = useCaseGetNowPlayingMovies(BuildConfig.API_KEY)
+            val result: Result<DomainMoviesInfo> = useCaseGetNowPlayingMovies(BuildConfig.API_KEY)
 
-            result.fold({ value: DomainMovieResponse ->
+            result.fold({ value: DomainMoviesInfo ->
                 _listMovies.value = value.results
                 resetErrorMessage()
             }, { throwable: Throwable ->

@@ -12,7 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.starshas.themoviedb.R
 import com.starshas.themoviedb.databinding.FragmentMovieInfoBinding
-import com.starshas.themoviedb.domain.models.DomainMovieResponse.*
+import com.starshas.themoviedb.domain.models.DomainMoviesInfo.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch

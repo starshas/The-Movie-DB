@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 // Domain model representing the response containing movies.
-data class DomainMovieResponse(
+data class DomainMoviesInfo(
     val dates: DateRange,
     val page: Int,
     val results: List<Movie>,

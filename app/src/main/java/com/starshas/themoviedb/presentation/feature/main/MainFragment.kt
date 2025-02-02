@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.starshas.themoviedb.R
 import com.starshas.themoviedb.databinding.FragmentMainBinding
-import com.starshas.themoviedb.domain.models.DomainMovieResponse.Movie
+import com.starshas.themoviedb.domain.models.DomainMoviesInfo.Movie
 import com.starshas.themoviedb.presentation.feature.movieinfo.MovieInfoFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first

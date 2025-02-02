@@ -4,7 +4,7 @@ import com.starshas.themoviedb.data.models.ApiError
 import com.starshas.themoviedb.data.constants.DataConstants
 import com.starshas.themoviedb.data.models.DataMovieResponse
 import com.starshas.themoviedb.domain.models.DomainApiError
-import com.starshas.themoviedb.domain.models.DomainMovieResponse as DomainMovieResponse
+import com.starshas.themoviedb.domain.models.DomainMoviesInfo as DomainMovieResponse
 
 fun DataMovieResponse.Movie.toDomainModel(): DomainMovieResponse.Movie {
     return DomainMovieResponse.Movie(
