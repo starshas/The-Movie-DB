@@ -8,16 +8,18 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
-class FavoritesRepositoryImpl @Inject constructor(
-    private val dataStoreManager: DataStoreManager,
-    private val coroutineContext: CoroutineContext = Dispatchers.IO
-) : FavoritesRepository {
-    override suspend fun setFavorite(movieId: Int, isFavorite: Boolean) =
-        withContext(coroutineContext) {
+class FavoritesRepositoryImpl
+    @Inject
+    constructor(
+        private val dataStoreManager: DataStoreManager,
+        private val coroutineContext: CoroutineContext = Dispatchers.IO,
+    ) : FavoritesRepository {
+        override suspend fun setFavorite(
+            movieId: Int,
+            isFavorite: Boolean,
+        ) = withContext(coroutineContext) {
             dataStoreManager.setFavoriteMovie(movieId, isFavorite)
         }
 
-    override fun isFavorite(movieId: Int): Flow<Boolean> {
-        return dataStoreManager.isFavoriteMoviesFlow(movieId)
+        override fun isFavorite(movieId: Int): Flow<Boolean> = dataStoreManager.isFavoriteMoviesFlow(movieId)
     }
-}

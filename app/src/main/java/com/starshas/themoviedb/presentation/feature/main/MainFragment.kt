@@ -20,14 +20,16 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainFragment : Fragment() {
+    @Suppress("internal:backing-property-naming")
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
     private val viewModel: MainViewModel by viewModels()
     private val moviesAdapter get() = binding.recyclerView.adapter as MoviesAdapter
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
 
@@ -35,19 +37,20 @@ class MainFragment : Fragment() {
 
         val recyclerView: RecyclerView = binding.recyclerView
         recyclerView.layoutManager = gridLayoutManager
-        recyclerView.adapter = MoviesAdapter(
-            context = requireContext(),
-            openMovieAction = {
-                navigateToAnotherFragment(it)
-            },
-            setFavorite = { movieId: Int, newValue: Boolean -> setFavorite(movieId, newValue) },
-            isFavoriteCallback = { movieId, callback ->
-                lifecycleScope.launch {
-                    val isFavorite = viewModel.isFavorite(movieId).first()
-                    callback(isFavorite)
-                }
-            }
-        )
+        recyclerView.adapter =
+            MoviesAdapter(
+                context = requireContext(),
+                openMovieAction = {
+                    navigateToAnotherFragment(it)
+                },
+                setFavorite = { movieId: Int, newValue: Boolean -> setFavorite(movieId, newValue) },
+                isFavoriteCallback = { movieId, callback ->
+                    lifecycleScope.launch {
+                        val isFavorite = viewModel.isFavorite(movieId).first()
+                        callback(isFavorite)
+                    }
+                },
+            )
 
         binding.buttonReload.setOnClickListener {
             viewModel.fetchNowPlayingMovies()
@@ -56,36 +59,44 @@ class MainFragment : Fragment() {
         return binding.root
     }
 
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.listMovie.observe(viewLifecycleOwner) {
+        viewModel.listMovies.observe(viewLifecycleOwner) {
             moviesAdapter.setData(it)
         }
         viewModel.errorMessage.observe(viewLifecycleOwner) {
             if (it != null) {
-                Toast.makeText(
-                    requireContext(),
-                    it,
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast
+                    .makeText(
+                        requireContext(),
+                        it,
+                        Toast.LENGTH_SHORT,
+                    ).show()
                 viewModel.resetErrorMessage()
                 binding.buttonReload.visibility = View.VISIBLE
             }
         }
     }
 
-    private fun setFavorite(movieId: Int, newValue: Boolean) {
+    private fun setFavorite(
+        movieId: Int,
+        newValue: Boolean,
+    ) {
         viewModel.setFavorite(movieId, newValue)
     }
 
     private fun navigateToAnotherFragment(movie: Movie) {
-        val destinationFragment = MovieInfoFragment().apply {
-            arguments = Bundle().apply {
-                putParcelable(MovieInfoFragment.ARGUMENT_MOVIE, movie)
+        val destinationFragment =
+            MovieInfoFragment().apply {
+                arguments =
+                    Bundle().apply {
+                        putParcelable(MovieInfoFragment.ARGUMENT_MOVIE, movie)
+                    }
             }
-        }
 
         requireActivity().supportFragmentManager.beginTransaction().apply {
             add(R.id.fragmentContainer, destinationFragment)

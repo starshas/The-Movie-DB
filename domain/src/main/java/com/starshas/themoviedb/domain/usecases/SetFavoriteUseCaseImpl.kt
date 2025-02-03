@@ -7,9 +7,12 @@ import kotlin.coroutines.CoroutineContext
 
 class SetFavoriteUseCaseImpl(
     private val favoritesRepository: FavoritesRepository,
-    private val coroutineContext: CoroutineContext = Dispatchers.IO
+    private val coroutineContext: CoroutineContext = Dispatchers.IO,
 ) : SetFavoriteUseCase {
-    override suspend operator fun invoke(movieId: Int, isFavorite: Boolean) = withContext(coroutineContext){
+    override suspend operator fun invoke(
+        movieId: Int,
+        isFavorite: Boolean,
+    ) = withContext(coroutineContext) {
         favoritesRepository.setFavorite(movieId, isFavorite)
     }
 }

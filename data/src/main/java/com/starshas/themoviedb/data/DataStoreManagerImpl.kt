@@ -10,28 +10,33 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class DataStoreManagerImpl @Inject constructor(
-    @ApplicationContext private val context: Context
-) : DataStoreManager {
-    private val Context.dataStore by preferencesDataStore(name = "movie_preferences")
+class DataStoreManagerImpl
+    @Inject
+    constructor(
+        @ApplicationContext private val context: Context,
+    ) : DataStoreManager {
+        private val Context.dataStore by preferencesDataStore(name = "movie_preferences")
 
-    private fun getFavoriteMoviePreferenceKey(movieId: Int): Preferences.Key<Boolean> {
-        val favoriteKeyPrefix = "favorite_movie_"
-        return booleanPreferencesKey(favoriteKeyPrefix + movieId)
-    }
+        private fun getFavoriteMoviePreferenceKey(movieId: Int): Preferences.Key<Boolean> {
+            val favoriteKeyPrefix = "favorite_movie_"
+            return booleanPreferencesKey(favoriteKeyPrefix + movieId)
+        }
 
-    override suspend fun setFavoriteMovie(movieId: Int, isFavorite: Boolean) {
-        val preferenceKey = getFavoriteMoviePreferenceKey(movieId)
-        context.dataStore.edit { preferences ->
-            preferences[preferenceKey] = isFavorite
+        override suspend fun setFavoriteMovie(
+            movieId: Int,
+            isFavorite: Boolean,
+        ) {
+            val preferenceKey = getFavoriteMoviePreferenceKey(movieId)
+            context.dataStore.edit { preferences ->
+                preferences[preferenceKey] = isFavorite
+            }
+        }
+
+        override fun isFavoriteMoviesFlow(movieId: Int): Flow<Boolean> {
+            val preferenceKey = getFavoriteMoviePreferenceKey(movieId)
+            return context.dataStore.data
+                .map { preferences ->
+                    preferences[preferenceKey] ?: false
+                }
         }
     }
-
-    override fun isFavoriteMoviesFlow(movieId: Int): Flow<Boolean> {
-        val preferenceKey = getFavoriteMoviePreferenceKey(movieId)
-        return context.dataStore.data
-            .map { preferences ->
-                preferences[preferenceKey] ?: false
-            }
-    }
-}
