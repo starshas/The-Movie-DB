@@ -33,57 +33,59 @@ object AppModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
-        val logging = HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
-        }
+        val logging =
+            HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            }
 
-        return OkHttpClient.Builder()
+        return OkHttpClient
+            .Builder()
             .addInterceptor(logging)
             .build()
     }
 
     @Provides
     @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
-        .baseUrl(DataConstants.BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .client(okHttpClient)
-        .build()
+    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit =
+        Retrofit
+            .Builder()
+            .baseUrl(DataConstants.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(okHttpClient)
+            .build()
 
     @Provides
     @Singleton
-    fun provideMovieDbApi(retrofit: Retrofit): MovieDbApi = retrofit.create(
-        com.starshas.themoviedb.data.MovieDbApi::class.java)
+    fun provideMovieDbApi(retrofit: Retrofit): MovieDbApi =
+        retrofit.create(
+            MovieDbApi::class.java,
+        )
 
     @Singleton
     @Provides
-    fun provideMoviesRepository(apiMovieDB: MovieDbApi): MoviesRepository {
-        return MoviesRepositoryImpl(apiMovieDB)
-    }
+    fun provideMoviesRepository(apiMovieDB: MovieDbApi): MoviesRepository = MoviesRepositoryImpl(apiMovieDB)
+
+    @Suppress("ktlint:standard:function-signature")
+    @Singleton
+    @Provides
+    fun provideFavoritesRepository(
+        dataStoreManager: DataStoreManager,
+    ): FavoritesRepository = FavoritesRepositoryImpl(dataStoreManager)
 
     @Singleton
     @Provides
-    fun provideFavoritesRepository(dataStoreManager: com.starshas.themoviedb.data.DataStoreManager): FavoritesRepository {
-        return FavoritesRepositoryImpl(dataStoreManager)
-    }
+    fun provideGetNowPlayingMoviesUseCase(moviesRepository: MoviesRepository): GetNowPlayingMoviesUseCase =
+        GetNowPlayingMoviesUseCaseImpl(moviesRepository)
 
     @Singleton
     @Provides
-    fun provideGetNowPlayingMoviesUseCase(moviesRepository: MoviesRepository): GetNowPlayingMoviesUseCase {
-        return GetNowPlayingMoviesUseCaseImpl(moviesRepository)
-    }
+    fun provideGetFavoriteStatusUseCase(favoritesRepository: FavoritesRepository): GetFavoriteStatusUseCase =
+        GetFavoriteStatusUseCaseImpl(favoritesRepository)
 
     @Singleton
     @Provides
-    fun provideGetFavoriteStatusUseCase(favoritesRepository: FavoritesRepository): GetFavoriteStatusUseCase {
-        return GetFavoriteStatusUseCaseImpl(favoritesRepository)
-    }
-
-    @Singleton
-    @Provides
-    fun provideSetFavoriteUseCase(favoritesRepository: FavoritesRepository): SetFavoriteUseCase {
-        return SetFavoriteUseCaseImpl(favoritesRepository)
-    }
+    fun provideSetFavoriteUseCase(favoritesRepository: FavoritesRepository): SetFavoriteUseCase =
+        SetFavoriteUseCaseImpl(favoritesRepository)
 }
 
 @Module

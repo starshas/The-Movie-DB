@@ -9,7 +9,7 @@ data class DomainMoviesInfo(
     val page: Int,
     val results: List<Movie>,
     val totalPages: Int,
-    val totalResults: Int
+    val totalResults: Int,
 ) {
     @Parcelize
     data class Movie(
@@ -26,11 +26,11 @@ data class DomainMoviesInfo(
         val title: String,
         val video: Boolean,
         val voteAverage: Double,
-        val voteCount: Int
+        val voteCount: Int,
     ) : Parcelable
 
     data class DateRange(
         val maximum: String,
-        val minimum: String
+        val minimum: String,
     )
 }

@@ -18,54 +18,62 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
-    private val useCaseGetNowPlayingMovies: GetNowPlayingMoviesUseCase,
-    private val stringProvider: StringProvider,
-    private val setFavoriteUseCase: SetFavoriteUseCase,
-    private val getFavoriteStatusUseCase: GetFavoriteStatusUseCase
-) : ViewModel() {
-    private var _listMovies: MutableLiveData<List<DomainMoviesInfo.Movie>> = MutableLiveData()
-    val listMovie: LiveData<List<DomainMoviesInfo.Movie>> = _listMovies
-    private val _errorMessage: MutableLiveData<String?> = MutableLiveData()
-    val errorMessage: LiveData<String?> = _errorMessage
+class MainViewModel
+    @Inject
+    constructor(
+        private val useCaseGetNowPlayingMovies: GetNowPlayingMoviesUseCase,
+        private val stringProvider: StringProvider,
+        private val setFavoriteUseCase: SetFavoriteUseCase,
+        private val getFavoriteStatusUseCase: GetFavoriteStatusUseCase,
+    ) : ViewModel() {
+        private var _listMovies: MutableLiveData<List<DomainMoviesInfo.Movie>> = MutableLiveData()
+        val listMovies: LiveData<List<DomainMoviesInfo.Movie>> = _listMovies
+        private val _errorMessage: MutableLiveData<String?> = MutableLiveData()
+        val errorMessage: LiveData<String?> = _errorMessage
 
-    init {
-        fetchNowPlayingMovies()
-    }
-
-    fun fetchNowPlayingMovies() {
-        viewModelScope.launch {
-            val result: Result<DomainMoviesInfo> = useCaseGetNowPlayingMovies(BuildConfig.API_KEY)
-
-            result.fold({ value: DomainMoviesInfo ->
-                _listMovies.value = value.results
-                resetErrorMessage()
-            }, { throwable: Throwable ->
-                val error = throwable as DomainApiError
-                _errorMessage.value = when (error) {
-                    is DomainApiError.GenericError ->
-                        stringProvider.getString(R.string.main_error_while_loading_the_list)
-                    is DomainApiError.HttpError -> stringProvider.getHttpErrorMessage(
-                        R.string.main_http_error,
-                        httpCode = error.code,
-                        message = error.errorMessage
-                    )
-                    DomainApiError.NetworkError -> stringProvider.getString(R.string.main_network_error)
-                }
-            })
+        init {
+            fetchNowPlayingMovies()
         }
-    }
 
-    fun resetErrorMessage() {
-        _errorMessage.value = null
-    }
+        fun fetchNowPlayingMovies() {
+            viewModelScope.launch {
+                val result: Result<DomainMoviesInfo> = useCaseGetNowPlayingMovies(BuildConfig.API_KEY)
 
-    fun setFavorite(movieId: Int, isFavorite: Boolean) {
-        viewModelScope.launch {
-            setFavoriteUseCase(movieId, isFavorite)
+                result.fold({ value: DomainMoviesInfo ->
+                    _listMovies.value = value.results
+                    resetErrorMessage()
+                }, { throwable: Throwable ->
+                    val error = throwable as DomainApiError
+                    _errorMessage.value =
+                        when (error) {
+                            is DomainApiError.GenericError ->
+                                stringProvider.getString(R.string.main_error_while_loading_the_list)
+
+                            is DomainApiError.HttpError ->
+                                stringProvider.getHttpErrorMessage(
+                                    R.string.main_http_error,
+                                    httpCode = error.code,
+                                    message = error.errorMessage,
+                                )
+
+                            DomainApiError.NetworkError -> stringProvider.getString(R.string.main_network_error)
+                        }
+                })
+            }
         }
-    }
 
-    fun isFavorite(movieId: Int): Flow<Boolean> =
-        getFavoriteStatusUseCase(movieId)
-}
+        fun resetErrorMessage() {
+            _errorMessage.value = null
+        }
+
+        fun setFavorite(
+            movieId: Int,
+            isFavorite: Boolean,
+        ) {
+            viewModelScope.launch {
+                setFavoriteUseCase(movieId, isFavorite)
+            }
+        }
+
+        fun isFavorite(movieId: Int): Flow<Boolean> = getFavoriteStatusUseCase(movieId)
+    }

@@ -10,31 +10,39 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.starshas.themoviedb.R
-import com.starshas.themoviedb.domain.models.DomainMoviesInfo.*
+import com.starshas.themoviedb.domain.models.DomainMoviesInfo
 
 class MoviesAdapter(
     private val context: Context,
-    private val listMovies: MutableList<Movie> = mutableListOf(),
-    private val openMovieAction: (Movie) -> Unit,
+    private val listMovies: MutableList<DomainMoviesInfo.Movie> = mutableListOf(),
+    private val openMovieAction: (DomainMoviesInfo.Movie) -> Unit,
     private val setFavorite: (Int, Boolean) -> Unit,
-    private val isFavoriteCallback: (Int, (Boolean) -> Unit) -> Unit
-) :
-    RecyclerView.Adapter<MoviesAdapter.MovieViewHolder>() {
-    class MovieViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    private val isFavoriteCallback: (Int, (Boolean) -> Unit) -> Unit,
+) : RecyclerView.Adapter<MoviesAdapter.MovieViewHolder>() {
+    class MovieViewHolder(
+        view: View,
+    ) : RecyclerView.ViewHolder(view) {
         val imageViewPoster: ImageView = view.findViewById(R.id.movieItemImageViewPoster)
         val textViewTitle: TextView = view.findViewById(R.id.movieItemTextViewTitle)
         val imageViewStar: ImageView = view.findViewById(R.id.movieItemImageViewStar)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): MovieViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.movie_item, parent, false)
         return MovieViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: MovieViewHolder,
+        position: Int,
+    ) {
         val movie = listMovies[position]
         holder.textViewTitle.text = movie.title
-        Glide.with(context)
+        Glide
+            .with(context)
             .load(movie.posterUrl)
             .centerCrop()
             .into(holder.imageViewPoster)
@@ -55,14 +63,17 @@ class MoviesAdapter(
         }
     }
 
-    private fun setStarIcon(holder: MovieViewHolder, isFavorite: Boolean) {
+    private fun setStarIcon(
+        holder: MovieViewHolder,
+        isFavorite: Boolean,
+    ) {
         holder.imageViewStar.setImageResource(if (isFavorite) R.drawable.ic_star else R.drawable.ic_star_empty)
     }
 
     override fun getItemCount() = listMovies.size
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setData(list: List<Movie>) {
+    fun setData(list: List<DomainMoviesInfo.Movie>) {
         listMovies.clear()
         listMovies.addAll(list)
         notifyDataSetChanged()

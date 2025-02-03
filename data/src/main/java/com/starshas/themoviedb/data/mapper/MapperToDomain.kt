@@ -1,13 +1,13 @@
 package com.starshas.themoviedb.data.mapper
 
-import com.starshas.themoviedb.data.models.ApiError
 import com.starshas.themoviedb.data.constants.DataConstants
+import com.starshas.themoviedb.data.models.ApiError
 import com.starshas.themoviedb.data.models.DataMovieResponse
 import com.starshas.themoviedb.domain.models.DomainApiError
 import com.starshas.themoviedb.domain.models.DomainMoviesInfo as DomainMovieResponse
 
-fun DataMovieResponse.Movie.toDomainModel(): DomainMovieResponse.Movie {
-    return DomainMovieResponse.Movie(
+fun DataMovieResponse.Movie.toDomainModel(): DomainMovieResponse.Movie =
+    DomainMovieResponse.Movie(
         adult = adult,
         backdropUrl = "${DataConstants.BASE_URL_IMAGES}$backdropPath",
         genreIds = genreIds,
@@ -21,29 +21,27 @@ fun DataMovieResponse.Movie.toDomainModel(): DomainMovieResponse.Movie {
         title = title,
         video = video,
         voteAverage = voteAverage,
-        voteCount = voteCount
+        voteCount = voteCount,
     )
-}
 
- fun DataMovieResponse.DatesRange.toDomainModel(): DomainMovieResponse.DateRange {
-    return DomainMovieResponse.DateRange(
+fun DataMovieResponse.DatesRange.toDomainModel(): DomainMovieResponse.DateRange =
+    DomainMovieResponse.DateRange(
         maximum = maximum,
-        minimum = minimum
+        minimum = minimum,
     )
-}
 
-fun DataMovieResponse.toDomainModel(): DomainMovieResponse {
-    return DomainMovieResponse(
+fun DataMovieResponse.toDomainModel(): DomainMovieResponse =
+    DomainMovieResponse(
         dates = dates.toDomainModel(),
         page = page,
         results = results.map { it.toDomainModel() },
         totalPages = totalPages,
-        totalResults = totalResults
+        totalResults = totalResults,
     )
-}
 
-fun ApiError.toDomainApiError(): DomainApiError = when (this) {
-    is ApiError.NetworkError -> DomainApiError.NetworkError
-    is ApiError.HttpError -> DomainApiError.HttpError(this.code, this.errorMessage)
-    is ApiError.GenericError -> DomainApiError.GenericError(this.error)
-}
+fun ApiError.toDomainApiError(): DomainApiError =
+    when (this) {
+        is ApiError.NetworkError -> DomainApiError.NetworkError
+        is ApiError.HttpError -> DomainApiError.HttpError(this.code, this.errorMessage)
+        is ApiError.GenericError -> DomainApiError.GenericError(this.error)
+    }

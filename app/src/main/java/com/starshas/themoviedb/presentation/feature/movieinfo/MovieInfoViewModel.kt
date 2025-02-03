@@ -10,16 +10,20 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MovieInfoViewModel @Inject constructor(
-    private val setFavoriteUseCase: SetFavoriteUseCase,
-    private val getFavoriteStatusUseCase: GetFavoriteStatusUseCase
-) : ViewModel() {
-    fun setFavorite(movieId: Int, isFavorite: Boolean) {
-        viewModelScope.launch {
-            setFavoriteUseCase(movieId, isFavorite)
+class MovieInfoViewModel
+    @Inject
+    constructor(
+        private val setFavoriteUseCase: SetFavoriteUseCase,
+        private val getFavoriteStatusUseCase: GetFavoriteStatusUseCase,
+    ) : ViewModel() {
+        fun setFavorite(
+            movieId: Int,
+            isFavorite: Boolean,
+        ) {
+            viewModelScope.launch {
+                setFavoriteUseCase(movieId, isFavorite)
+            }
         }
-    }
 
-    fun isFavorite(movieId: Int): Flow<Boolean> =
-        getFavoriteStatusUseCase(movieId)
-}
+        fun isFavorite(movieId: Int): Flow<Boolean> = getFavoriteStatusUseCase(movieId)
+    }

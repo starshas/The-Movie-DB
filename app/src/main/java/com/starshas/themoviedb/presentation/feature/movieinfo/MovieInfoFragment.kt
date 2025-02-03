@@ -12,30 +12,34 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.starshas.themoviedb.R
 import com.starshas.themoviedb.databinding.FragmentMovieInfoBinding
-import com.starshas.themoviedb.domain.models.DomainMoviesInfo.*
+import com.starshas.themoviedb.domain.models.DomainMoviesInfo.Movie
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MovieInfoFragment : Fragment() {
+    @Suppress("internal:backing-property-naming")
     private var _binding: FragmentMovieInfoBinding? = null
     private val binding get() = _binding!!
     private val viewModel: MovieInfoViewModel by viewModels()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentMovieInfoBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     @SuppressLint("NewApi")
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         (activity as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
 
         val movie: Movie = requireArguments().getParcelable(ARGUMENT_MOVIE, Movie::class.java)!!
         binding.movieInfoTextViewMovieTitle.text = movie.title
@@ -45,7 +49,8 @@ class MovieInfoFragment : Fragment() {
             getString(R.string.movie_info_rating, movie.voteAverage.toString())
         binding.movieInfoTextViewMovieOverview.text =
             getString(R.string.movie_info_overview, movie.overview)
-        Glide.with(requireContext())
+        Glide
+            .with(requireContext())
             .load(movie.backdropUrl)
             .centerCrop()
             .into(binding.movieInfoImageViewMoviePoster)
@@ -76,7 +81,7 @@ class MovieInfoFragment : Fragment() {
 
     private fun setStarIcon(isFavorite: Boolean) {
         binding.movieInfoImageViewStar.setImageResource(
-            if (isFavorite) R.drawable.ic_star else R.drawable.ic_star_empty
+            if (isFavorite) R.drawable.ic_star else R.drawable.ic_star_empty,
         )
     }
 

@@ -10,15 +10,17 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, MainFragment())
-                .commit()
+            supportFragmentManager.beginTransaction().apply {
+                replace(R.id.fragmentContainer, MainFragment())
+                commit()
+            }
 
             supportFragmentManager.addOnBackStackChangedListener {
                 updateActionBar()
@@ -32,8 +34,8 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(canNavigateBack)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
             android.R.id.home -> {
                 onBackPressedDispatcher.onBackPressed()
                 true
@@ -41,5 +43,4 @@ class MainActivity : AppCompatActivity() {
 
             else -> super.onOptionsItemSelected(item)
         }
-    }
 }
