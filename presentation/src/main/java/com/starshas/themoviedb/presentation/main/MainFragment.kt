@@ -1,5 +1,6 @@
 package com.starshas.themoviedb.presentation.main
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -59,6 +60,7 @@ class MainFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
@@ -79,6 +81,10 @@ class MainFragment : Fragment() {
                 viewModel.resetErrorMessage()
                 binding.buttonReload.visibility = View.VISIBLE
             }
+        }
+
+        requireActivity().supportFragmentManager.addOnBackStackChangedListener {
+            moviesAdapter.notifyDataSetChanged()
         }
     }
 
