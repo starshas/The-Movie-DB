@@ -1,4 +1,4 @@
-package com.starshas.themoviewdb.presentation.main
+package com.starshas.themoviedb.presentation.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,7 +10,7 @@ import com.starshas.themoviedb.domain.usecases.GetFavoriteStatusUseCase
 import com.starshas.themoviedb.domain.usecases.GetNowPlayingMoviesUseCase
 import com.starshas.themoviedb.domain.usecases.SetFavoriteUseCase
 import com.starshas.themoviedb.domain.utils.StringProvider
-import com.starshas.themoviewdb.presentation.R
+import com.starshas.themoviedb.presentation.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch

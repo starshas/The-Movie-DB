@@ -1,4 +1,4 @@
-package com.starshas.themoviewdb.presentation.main
+package com.starshas.themoviedb.presentation.main
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,9 +11,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.starshas.themoviedb.domain.models.DomainMoviesInfo.Movie
-import com.starshas.themoviewdb.presentation.R
-import com.starshas.themoviewdb.presentation.databinding.FragmentMainBinding
-import com.starshas.themoviewdb.presentation.movieinfo.MovieInfoFragment
+import com.starshas.themoviedb.presentation.R
+import com.starshas.themoviedb.presentation.databinding.FragmentMainBinding
+import com.starshas.themoviedb.presentation.movieinfo.MovieInfoFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch

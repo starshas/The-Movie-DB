@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.starshas.themoviewdb.presentation"
+    namespace = "com.starshas.themoviedb.presentation"
     compileSdk = 34
 
     viewBinding {

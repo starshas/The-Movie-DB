@@ -1,4 +1,4 @@
-package com.starshas.themoviewdb.presentation.main
+package com.starshas.themoviedb.presentation.main
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -10,8 +10,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.starshas.themoviedb.domain.models.DomainMoviesInfo
-import com.starshas.themoviewdb.presentation.R
-import com.starshas.themoviewdb.presentation.main.MoviesAdapter.MovieViewHolder
+import com.starshas.themoviedb.presentation.R
+import com.starshas.themoviedb.presentation.main.MoviesAdapter.MovieViewHolder
 
 class MoviesAdapter(
     private val context: Context,

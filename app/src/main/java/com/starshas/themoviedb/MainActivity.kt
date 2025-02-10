@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.starshas.themoviedb.databinding.ActivityMainBinding
-import com.starshas.themoviewdb.presentation.main.MainFragment
+import com.starshas.themoviedb.presentation.main.MainFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
