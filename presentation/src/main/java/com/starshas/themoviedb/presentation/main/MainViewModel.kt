@@ -1,17 +1,16 @@
-package com.starshas.themoviedb.presentation.feature.main
+package com.starshas.themoviedb.presentation.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.starshas.themoviedb.BuildConfig
-import com.starshas.themoviedb.R
 import com.starshas.themoviedb.domain.models.DomainApiError
 import com.starshas.themoviedb.domain.models.DomainMoviesInfo
 import com.starshas.themoviedb.domain.usecases.GetFavoriteStatusUseCase
 import com.starshas.themoviedb.domain.usecases.GetNowPlayingMoviesUseCase
 import com.starshas.themoviedb.domain.usecases.SetFavoriteUseCase
 import com.starshas.themoviedb.domain.utils.StringProvider
+import com.starshas.themoviedb.presentation.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -37,7 +36,7 @@ class MainViewModel
 
         fun fetchNowPlayingMovies() {
             viewModelScope.launch {
-                val result: Result<DomainMoviesInfo> = useCaseGetNowPlayingMovies(BuildConfig.API_KEY)
+                val result: Result<DomainMoviesInfo> = useCaseGetNowPlayingMovies()
 
                 result.fold({ value: DomainMoviesInfo ->
                     _listMovies.value = value.results

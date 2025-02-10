@@ -1,5 +1,6 @@
-package com.starshas.themoviedb.presentation.feature.main
+package com.starshas.themoviedb.presentation.main
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,17 +11,17 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.starshas.themoviedb.R
-import com.starshas.themoviedb.databinding.FragmentMainBinding
 import com.starshas.themoviedb.domain.models.DomainMoviesInfo.Movie
-import com.starshas.themoviedb.presentation.feature.movieinfo.MovieInfoFragment
+import com.starshas.themoviedb.presentation.R
+import com.starshas.themoviedb.presentation.databinding.FragmentMainBinding
+import com.starshas.themoviedb.presentation.movieinfo.MovieInfoFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainFragment : Fragment() {
-    @Suppress("internal:backing-property-naming")
+    @Suppress("ktlint:standard:backing-property-naming")
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
     private val viewModel: MainViewModel by viewModels()
@@ -59,6 +60,7 @@ class MainFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
@@ -79,6 +81,10 @@ class MainFragment : Fragment() {
                 viewModel.resetErrorMessage()
                 binding.buttonReload.visibility = View.VISIBLE
             }
+        }
+
+        requireActivity().supportFragmentManager.addOnBackStackChangedListener {
+            moviesAdapter.notifyDataSetChanged()
         }
     }
 

@@ -1,4 +1,4 @@
-package com.starshas.themoviedb.presentation.feature.movieinfo
+package com.starshas.themoviedb.presentation.movieinfo
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

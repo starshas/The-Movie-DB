@@ -1,7 +1,5 @@
-import java.util.Properties
-
 plugins {
-    id("com.android.application")
+    id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
@@ -9,49 +7,26 @@ plugins {
 }
 
 android {
-    namespace = "com.starshas.themoviedb"
+    namespace = "com.starshas.themoviedb.presentation"
     compileSdk = 34
-
-    defaultConfig {
-        applicationId = "com.starshas.themoviedb"
-        minSdk = 24
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-    buildFeatures {
-        buildConfig = true
-    }
-
-    val secretsPropertiesFile = project.rootProject.file("secrets.properties")
-    val secretsProperties = Properties()
-
-    if (secretsPropertiesFile.exists()) {
-        secretsProperties.load(secretsPropertiesFile.inputStream())
-    } else {
-        throw GradleException("secrets.properties could not be found.")
-    }
-
-    buildTypes {
-        getByName("debug") {
-            buildConfigField("String", "API_KEY", "${secretsProperties["API_KEY"]}")
-        }
-        getByName("release") {
-            buildConfigField("String", "API_KEY", "${secretsProperties["API_KEY"]}")
-        }
-    }
 
     viewBinding {
         enable = true
     }
 
+    defaultConfig {
+        minSdk = 24
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
+    }
+
     buildTypes {
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro",
+                "proguard-rules.pro"
             )
         }
     }
@@ -65,8 +40,8 @@ android {
 }
 
 dependencies {
-    implementation(project(":presentation"))
-    implementation(project(":common"))
+    implementation(project(":di"))
+    implementation(project(":domain"))
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")

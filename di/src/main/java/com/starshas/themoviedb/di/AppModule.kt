@@ -1,5 +1,6 @@
 package com.starshas.themoviedb.di
 
+import com.starshas.themoviedb.common.ApiKeyProvider
 import com.starshas.themoviedb.data.DataStoreManager
 import com.starshas.themoviedb.data.DataStoreManagerImpl
 import com.starshas.themoviedb.data.MovieDbApi
@@ -29,7 +30,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AppModule {
+object DiModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
@@ -61,16 +62,19 @@ object AppModule {
             MovieDbApi::class.java,
         )
 
-    @Singleton
-    @Provides
-    fun provideMoviesRepository(apiMovieDB: MovieDbApi): MoviesRepository = MoviesRepositoryImpl(apiMovieDB)
-
     @Suppress("ktlint:standard:function-signature")
     @Singleton
     @Provides
     fun provideFavoritesRepository(
         dataStoreManager: DataStoreManager,
     ): FavoritesRepository = FavoritesRepositoryImpl(dataStoreManager)
+
+    @Singleton
+    @Provides
+    fun provideMoviesRepository(
+        apiKeyProvider: ApiKeyProvider,
+        movieDbApi: MovieDbApi,
+    ): MoviesRepository = MoviesRepositoryImpl(apiKey = apiKeyProvider.apiKey, movieDbApi)
 
     @Singleton
     @Provides

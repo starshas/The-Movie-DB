@@ -13,11 +13,12 @@ import java.io.IOException
 import kotlin.coroutines.CoroutineContext
 
 class MoviesRepositoryImpl(
+    private val apiKey: String,
     private val movieDbApi: MovieDbApi,
     private val coroutineContext: CoroutineContext = Dispatchers.IO,
 ) : MoviesRepository {
     @Suppress("TooGenericExceptionCaught")
-    override suspend fun getNowPlayingMovies(apiKey: String): Result<DomainMoviesInfo> =
+    override suspend fun getNowPlayingMovies(): Result<DomainMoviesInfo> =
         withContext(coroutineContext) {
             try {
                 val response = movieDbApi.getNowPlayingMovies(apiKey)
