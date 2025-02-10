@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.starshas.themoviedb.databinding.ActivityMainBinding
-import com.starshas.themoviedb.presentation.feature.main.MainFragment
+import com.starshas.themoviewdb.presentation.main.MainFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,7 +18,10 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction().apply {
-                replace(R.id.fragmentContainer, MainFragment())
+                replace(
+                    R.id.fragmentContainer,
+                    MainFragment(),
+                )
                 commit()
             }
 

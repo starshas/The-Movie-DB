@@ -1,4 +1,4 @@
-package com.starshas.themoviedb.presentation.feature.main
+package com.starshas.themoviewdb.presentation.main
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,17 +10,17 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.starshas.themoviedb.R
-import com.starshas.themoviedb.databinding.FragmentMainBinding
 import com.starshas.themoviedb.domain.models.DomainMoviesInfo.Movie
-import com.starshas.themoviedb.presentation.feature.movieinfo.MovieInfoFragment
+import com.starshas.themoviewdb.presentation.R
+import com.starshas.themoviewdb.presentation.databinding.FragmentMainBinding
+import com.starshas.themoviewdb.presentation.movieinfo.MovieInfoFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainFragment : Fragment() {
-    @Suppress("internal:backing-property-naming")
+    @Suppress("ktlint:standard:backing-property-naming")
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
     private val viewModel: MainViewModel by viewModels()

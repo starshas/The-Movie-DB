@@ -89,7 +89,7 @@ class GetNowPlayingMoviesUseCaseTest {
     @Before
     fun setUp() {
         movieDbApi = mockk()
-        moviesRepository = MoviesRepositoryImpl(movieDbApi, testCoroutineRule.dispatcher)
+        moviesRepository = MoviesRepositoryImpl(TEST_API_KEY, movieDbApi, testCoroutineRule.dispatcher)
         getNowPlayingMoviesUseCase = GetNowPlayingMoviesUseCaseImpl(moviesRepository)
     }
 
@@ -116,7 +116,7 @@ class GetNowPlayingMoviesUseCaseTest {
 
             coEvery { movieDbApi.getNowPlayingMovies(TEST_API_KEY) } returns dataResponse
 
-            val result: Result<DomainMoviesInfo> = getNowPlayingMoviesUseCase(TEST_API_KEY)
+            val result: Result<DomainMoviesInfo> = getNowPlayingMoviesUseCase()
             assertTrue(result.isSuccess)
             val actualResponse = result.getOrNull()
             assertNotNull(actualResponse)
@@ -129,7 +129,7 @@ class GetNowPlayingMoviesUseCaseTest {
             val exception = Exception("Generic Exception")
             coEvery { movieDbApi.getNowPlayingMovies(TEST_API_KEY) } throws exception
 
-            val result: Result<DomainMoviesInfo> = getNowPlayingMoviesUseCase(TEST_API_KEY)
+            val result: Result<DomainMoviesInfo> = getNowPlayingMoviesUseCase()
             assertTrue(result.isFailure)
             val actualException = result.exceptionOrNull()
             assertNotNull(actualException)
@@ -147,7 +147,7 @@ class GetNowPlayingMoviesUseCaseTest {
             val dataResponse: Response<DataMovieResponse> = Response.error(errorCode, errorResponseBody)
             coEvery { movieDbApi.getNowPlayingMovies(TEST_API_KEY) } returns dataResponse
 
-            val result: Result<DomainMoviesInfo> = getNowPlayingMoviesUseCase(TEST_API_KEY)
+            val result: Result<DomainMoviesInfo> = getNowPlayingMoviesUseCase()
             assertTrue(result.isFailure)
             val actualException = result.exceptionOrNull()
             assertNotNull(actualException)

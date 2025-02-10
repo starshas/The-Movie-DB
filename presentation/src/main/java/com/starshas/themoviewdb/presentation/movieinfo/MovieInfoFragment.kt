@@ -1,4 +1,4 @@
-package com.starshas.themoviedb.presentation.feature.movieinfo
+package com.starshas.themoviewdb.presentation.movieinfo
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -10,9 +10,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
-import com.starshas.themoviedb.R
-import com.starshas.themoviedb.databinding.FragmentMovieInfoBinding
 import com.starshas.themoviedb.domain.models.DomainMoviesInfo.Movie
+import com.starshas.themoviewdb.presentation.R
+import com.starshas.themoviewdb.presentation.databinding.FragmentMovieInfoBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch

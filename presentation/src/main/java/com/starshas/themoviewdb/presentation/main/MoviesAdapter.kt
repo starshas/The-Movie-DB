@@ -1,4 +1,4 @@
-package com.starshas.themoviedb.presentation.feature.main
+package com.starshas.themoviewdb.presentation.main
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -9,8 +9,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.starshas.themoviedb.R
 import com.starshas.themoviedb.domain.models.DomainMoviesInfo
+import com.starshas.themoviewdb.presentation.R
+import com.starshas.themoviewdb.presentation.main.MoviesAdapter.MovieViewHolder
 
 class MoviesAdapter(
     private val context: Context,
@@ -18,7 +19,7 @@ class MoviesAdapter(
     private val openMovieAction: (DomainMoviesInfo.Movie) -> Unit,
     private val setFavorite: (Int, Boolean) -> Unit,
     private val isFavoriteCallback: (Int, (Boolean) -> Unit) -> Unit,
-) : RecyclerView.Adapter<MoviesAdapter.MovieViewHolder>() {
+) : RecyclerView.Adapter<MovieViewHolder>() {
     class MovieViewHolder(
         view: View,
     ) : RecyclerView.ViewHolder(view) {
